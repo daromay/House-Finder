@@ -1,0 +1,529 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>בית בנס ציונה</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@700;900&family=Rubik:wght@500;600&display=swap">
+<style>
+/* Layout: one calm column of large listing cards (phone first), a sticky filter strip, then neighborhood table and settings. Orchard greens: Ness Ziona's citrus history. */
+:root {
+  --bg: #f4f6f0;
+  --surface: #ffffff;
+  --surface-2: #eaeee4;
+  --ink: #1b271f;
+  --muted: #5b6a5f;
+  --line: #d6ddcf;
+  --accent: #2c6a3c;
+  --accent-ink: #ffffff;
+  --accent-soft: #dcebdc;
+  --new: #a86a00;
+  --new-soft: #fbedcc;
+  --drop: #b3361f;
+  --drop-soft: #f9e0d9;
+  --good: #23784a;
+  --good-soft: #d9f0e1;
+  --font-display: "Frank Ruhl Libre", "David", Georgia, serif;
+  --font-body: "Assistant", "Segoe UI", Arial, sans-serif;
+  --font-num: "Rubik", "Assistant", Arial, sans-serif;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111612; --surface: #19201b; --surface-2: #222b24; --ink: #e8eee6; --muted: #a2b0a5; --line: #2f3a32;
+    --accent: #7fc48f; --accent-ink: #0f1a12; --accent-soft: #1f3526;
+    --new: #f0bd5a; --new-soft: #3a2f16; --drop: #f08a73; --drop-soft: #3d221c; --good: #7fd3a0; --good-soft: #183a27;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111612; --surface: #19201b; --surface-2: #222b24; --ink: #e8eee6; --muted: #a2b0a5; --line: #2f3a32;
+  --accent: #7fc48f; --accent-ink: #0f1a12; --accent-soft: #1f3526;
+  --new: #f0bd5a; --new-soft: #3a2f16; --drop: #f08a73; --drop-soft: #3d221c; --good: #7fd3a0; --good-soft: #183a27;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+.app { max-width: 760px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; text-align: right; }
+h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: 2.1rem; font-weight: 900; line-height: 1.1; }
+h2 { font-size: 1.35rem; font-weight: 700; }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+button, select, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+header { display: grid; gap: 6px; }
+.sub { color: var(--muted); margin: 0; }
+.status-line { font-size: .95rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.sum { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; text-align: right; cursor: pointer; display: grid; gap: 2px; }
+.sum b { font-family: var(--font-num); font-size: 1.6rem; line-height: 1.1; }
+.sum span { color: var(--muted); font-size: .9rem; }
+.sum[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+@media (max-width: 480px) { .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.filters { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 8px; display: grid; gap: 8px; border-bottom: 1px solid var(--line); }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.chip { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 14px; cursor: pointer; white-space: nowrap; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.selects { display: flex; flex-wrap: wrap; gap: 8px; }
+.selects label { display: flex; align-items: center; gap: 6px; font-size: .95rem; color: var(--muted); }
+select, input[type="number"], input[type="text"] { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; min-height: 40px; }
+
+.list { display: grid; gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; }
+.card.rejected { opacity: .62; }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.price { font-family: var(--font-num); font-size: 1.75rem; font-weight: 600; line-height: 1.1; }
+.price.none { font-size: 1.2rem; color: var(--muted); font-family: var(--font-body); font-weight: 600; }
+.old { color: var(--muted); text-decoration: line-through; font-size: 1rem; margin-inline-start: 8px; font-family: var(--font-num); }
+.addr { font-size: 1.15rem; font-weight: 700; margin: 0; }
+.hood { color: var(--muted); margin: 0; }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.badge { font-size: .85rem; font-weight: 700; border-radius: 6px; padding: 2px 8px; }
+.b-new { background: var(--new-soft); color: var(--new); }
+.b-drop { background: var(--drop-soft); color: var(--drop); }
+.b-src { background: var(--surface-2); color: var(--muted); font-weight: 600; }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; background: var(--surface-2); border-radius: 10px; padding: 10px; }
+.fact { display: grid; gap: 0; min-width: 0; }
+.fact span { font-size: .8rem; color: var(--muted); }
+.fact b { font-family: var(--font-num); font-weight: 500; font-variant-numeric: tabular-nums; }
+.fact .cmp { font-size: .78rem; font-weight: 600; }
+.cmp.lo { color: var(--good); } .cmp.hi { color: var(--drop); }
+@media (max-width: 480px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.agent { font-size: .95rem; color: var(--muted); margin: 0; }
+.spark { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--muted); }
+.spark svg { flex: none; }
+
+.status-row { display: grid; gap: 6px; }
+.status-row > span { font-size: .9rem; color: var(--muted); }
+.st-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.st { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 6px 12px; cursor: pointer; min-height: 40px; }
+.st[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); font-weight: 700; }
+.st.rej[aria-pressed="true"] { background: var(--drop-soft); border-color: var(--drop); color: var(--drop); }
+
+.notes { display: grid; gap: 4px; }
+.notes textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--bg); }
+.notes small { color: var(--muted); min-height: 1.2em; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; border-radius: 10px; padding: 8px 16px; min-height: 44px; font-weight: 700; border: 1px solid var(--accent); cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--accent); }
+.who { font-size: .82rem; color: var(--muted); }
+
+.empty { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--r); padding: 24px; text-align: center; color: var(--muted); }
+
+section.block { display: grid; gap: 10px; }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { color: var(--muted); font-weight: 600; font-size: .85rem; }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+details.settings { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; }
+details.settings summary { cursor: pointer; font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+.form { display: grid; gap: 14px; margin-top: 14px; }
+.form label { display: grid; gap: 4px; font-weight: 600; }
+.form .hint { font-weight: 400; color: var(--muted); font-size: .9rem; }
+.cities { display: flex; flex-wrap: wrap; gap: 8px; }
+.cities label { display: flex; align-items: center; gap: 6px; font-weight: 400; background: var(--surface-2); border-radius: 999px; padding: 4px 12px; }
+.save-msg { color: var(--good); font-weight: 600; min-height: 1.4em; }
+.foot { color: var(--muted); font-size: .9rem; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: opacity .2s; } }
+</style>
+
+<div class="app" dir="rtl" lang="he">
+  <header>
+    <h1>בית בנס ציונה</h1>
+    <p class="sub" id="sub">בתים פרטיים וקוטג׳ים למכירה · יד2 ומדלן</p>
+    <div class="status-line" id="statusLine"><span>טוען נתונים…</span></div>
+  </header>
+
+  <div class="summary" id="summary">
+    <button class="sum" type="button" data-quick="all" aria-pressed="true"><b id="cAll">–</b><span>בתים בתקציב</span></button>
+    <button class="sum" type="button" data-quick="new" aria-pressed="false"><b id="cNew">–</b><span>חדשים</span></button>
+    <button class="sum" type="button" data-quick="drop" aria-pressed="false"><b id="cDrop">–</b><span>ירדו במחיר</span></button>
+    <button class="sum" type="button" data-quick="interested" aria-pressed="false"><b id="cFav">–</b><span>מעניינים</span></button>
+  </div>
+
+  <div class="filters">
+    <div class="chips" id="statusChips" role="group" aria-label="סינון לפי מצב"></div>
+    <div class="selects">
+      <label for="sortSel">מיון
+        <select id="sortSel">
+          <option value="price">מחיר: מהזול ליקר</option>
+          <option value="price-desc">מחיר: מהיקר לזול</option>
+          <option value="ppsqm">מחיר למ״ר</option>
+          <option value="sqm">הכי גדול</option>
+          <option value="recent">נכנס לאחרונה</option>
+        </select>
+      </label>
+      <label for="hoodSel">שכונה
+        <select id="hoodSel"><option value="">כל השכונות</option></select>
+      </label>
+      <label for="roomsSel">חדרים
+        <select id="roomsSel">
+          <option value="0">הכל</option>
+          <option value="3">3 ומעלה</option>
+          <option value="4">4 ומעלה</option>
+          <option value="5">5 ומעלה</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="list" id="list">
+    <div class="empty">הבתים יופיעו כאן אחרי הבדיקה הראשונה. הבדיקה רצה אוטומטית כל יומיים.</div>
+  </div>
+
+  <section class="block">
+    <h2>לפי שכונה</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>שכונה</th><th>בתים</th><th>מחיר ממוצע</th><th>ממוצע למ״ר</th></tr></thead>
+        <tbody id="hoodBody"><tr><td colspan="4">אין עדיין נתונים</td></tr></tbody>
+      </table>
+    </div>
+    <p class="foot">ממוצע למ״ר מחושב רק מבתים עם מחיר. במודעות של בתים פרטיים המטראז׳ הוא לפעמים גודל המגרש.</p>
+  </section>
+
+  <details class="settings" id="settingsBox">
+    <summary>הגדרות חיפוש</summary>
+    <form class="form" id="settingsForm">
+      <label for="maxPrice">תקציב מקסימלי (₪)
+        <input type="number" id="maxPrice" min="500000" step="50000" inputmode="numeric">
+        <span class="hint">הבדיקה הבאה תחפש עד הסכום הזה.</span>
+      </label>
+      <div>
+        <div style="font-weight:600;margin-bottom:6px">ערים לחיפוש</div>
+        <div class="cities" id="cities"></div>
+      </div>
+      <label for="extraCity">עיר נוספת
+        <input type="text" id="extraCity" placeholder="למשל: מזכרת בתיה">
+      </label>
+      <div class="actions">
+        <button class="btn primary" type="submit" id="saveSettings">שמירת הגדרות</button>
+      </div>
+      <div class="save-msg" id="saveMsg" aria-live="polite"></div>
+    </form>
+  </details>
+
+  <p class="foot">כל מי שהדף משותף איתו רואה את אותם סימונים והערות. הבדיקה האוטומטית מעדכנת את הרשימה כל יומיים בבוקר.</p>
+</div>
+
+<script>
+(() => {
+  const STATUSES = [
+    { key: "", label: "טרם סומן", short: "חדש" },
+    { key: "interested", label: "⭐ מעניין" },
+    { key: "contacted", label: "📞 דיברנו" },
+    { key: "visited", label: "🏠 ביקרנו" },
+    { key: "offer", label: "🤝 הצעה" },
+    { key: "rejected", label: "✕ לא מתאים" },
+  ];
+  const DEFAULT_CITIES = ["נס ציונה", "רחובות", "גן יבנה", "ראשון לציון", "באר יעקב"];
+  const state = {
+    listings: [], marks: {}, settings: null, status: null,
+    filter: "active", quick: "all", sort: "price", hood: "", rooms: 0,
+    db: null, user: null, canWrite: true, profiles: {}
+  };
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => "₪" + Math.round(n).toLocaleString("he-IL");
+  const fmtM = (n) => "₪" + (n / 1e6).toLocaleString("he-IL", { maximumFractionDigits: 2 }) + " מ׳";
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const daysSince = (iso) => iso ? Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 864e5)) : null;
+  const heDate = (iso) => iso ? new Date(iso).toLocaleDateString("he-IL", { day: "numeric", month: "numeric" }) : "";
+
+  try { const s = JSON.parse(localStorage.getItem("hh-ui") || "{}"); Object.assign(state, { filter: s.filter || "active", sort: s.sort || "price" }); } catch (e) {}
+  const saveUi = () => { try { localStorage.setItem("hh-ui", JSON.stringify({ filter: state.filter, sort: state.sort })); } catch (e) {} };
+
+  // ---------- derived ----------
+  function statusOf(l) { return (state.marks[l.id] && state.marks[l.id].status) || ""; }
+  function ppsqm(l) { return l.price && l.sqm ? l.price / l.sqm : null; }
+  function isDrop(l) { return l.prevPrice && l.price && l.price < l.prevPrice; }
+  function hoodStats() {
+    const m = {};
+    state.listings.filter((l) => l.active !== false).forEach((l) => {
+      const h = l.neighborhood || "לא צוין";
+      m[h] = m[h] || { n: 0, priced: 0, sum: 0, ppsSum: 0, ppsN: 0 };
+      m[h].n++;
+      if (l.price) { m[h].priced++; m[h].sum += l.price; }
+      const p = ppsqm(l); if (p) { m[h].ppsSum += p; m[h].ppsN++; }
+    });
+    return m;
+  }
+
+  // ---------- render ----------
+  function renderChips() {
+    const opts = [{ key: "active", label: "הכל" }, ...STATUSES.filter((s) => s.key).map((s) => ({ key: s.key, label: s.label })), { key: "unmarked", label: "טרם סומנו" }];
+    const counts = {};
+    state.listings.filter((l) => l.active !== false).forEach((l) => { const s = statusOf(l); counts[s || "unmarked"] = (counts[s || "unmarked"] || 0) + 1; });
+    $("statusChips").innerHTML = opts.map((o) => {
+      const c = o.key === "active" ? state.listings.filter((l) => l.active !== false && statusOf(l) !== "rejected").length : (counts[o.key] || 0);
+      return `<button type="button" class="chip" data-f="${o.key}" aria-pressed="${state.filter === o.key}">${esc(o.label)} <span class="num">${c}</span></button>`;
+    }).join("");
+  }
+
+  function renderSummary() {
+    const act = state.listings.filter((l) => l.active !== false);
+    $("cAll").textContent = act.length;
+    $("cNew").textContent = act.filter((l) => l.isNew).length;
+    $("cDrop").textContent = act.filter(isDrop).length;
+    $("cFav").textContent = act.filter((l) => statusOf(l) === "interested").length;
+    document.querySelectorAll(".sum").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.quick === state.quick)));
+  }
+
+  function renderStatus() {
+    const s = state.status || {};
+    const st = state.settings || {};
+    const parts = [];
+    if (s.lastRun) parts.push(`<span>עודכן לאחרונה: ${esc(new Date(s.lastRun).toLocaleString("he-IL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }))}</span>`);
+    if (s.nextRun) parts.push(`<span>בדיקה הבאה: ${esc(new Date(s.nextRun).toLocaleString("he-IL", { weekday: "long", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }))}</span>`);
+    if (s.summary) parts.push(`<span>${esc(s.summary)}</span>`);
+    $("statusLine").innerHTML = parts.join("") || "<span>ממתין לבדיקה הראשונה</span>";
+    const cities = (st.cities && st.cities.length ? st.cities : ["נס ציונה"]).join(", ");
+    $("sub").textContent = `בתים פרטיים וקוטג׳ים למכירה ב${cities}${st.maxPrice ? " · עד " + fmtM(st.maxPrice) : ""} · יד2 ומדלן`;
+  }
+
+  function sparkSvg(hist) {
+    if (!hist || hist.length < 2) return "";
+    const w = 90, h = 26, pad = 3;
+    const ps = hist.map((x) => x.price);
+    const mn = Math.min(...ps), mx = Math.max(...ps), rng = mx - mn || 1;
+    const pts = hist.map((x, i) => [w - pad - i * (w - 2 * pad) / (hist.length - 1), h - pad - (x.price - mn) / rng * (h - 2 * pad)]);
+    const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+    const last = pts[pts.length - 1];
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2"/><circle cx="${last[0]}" cy="${last[1]}" r="3" fill="var(--accent)"/></svg>`;
+  }
+
+  function filtered() {
+    let ls = state.listings.filter((l) => l.active !== false);
+    if (state.quick === "new") ls = ls.filter((l) => l.isNew);
+    else if (state.quick === "drop") ls = ls.filter(isDrop);
+    else if (state.quick === "interested") ls = ls.filter((l) => statusOf(l) === "interested");
+    if (state.filter === "active") ls = ls.filter((l) => statusOf(l) !== "rejected");
+    else if (state.filter === "unmarked") ls = ls.filter((l) => !statusOf(l));
+    else ls = ls.filter((l) => statusOf(l) === state.filter);
+    if (state.hood) ls = ls.filter((l) => (l.neighborhood || "לא צוין") === state.hood);
+    if (state.rooms) ls = ls.filter((l) => (l.rooms || 0) >= state.rooms);
+    const big = 1e12;
+    const by = {
+      "price": (a, b) => (a.price || big) - (b.price || big),
+      "price-desc": (a, b) => (b.price || 0) - (a.price || 0),
+      "ppsqm": (a, b) => (ppsqm(a) || big) - (ppsqm(b) || big),
+      "sqm": (a, b) => (b.sqm || 0) - (a.sqm || 0),
+      "recent": (a, b) => String(b.firstSeen || "").localeCompare(String(a.firstSeen || "")),
+    }[state.sort];
+    return ls.sort(by);
+  }
+
+  function cardHtml(l, hs) {
+    const st = statusOf(l);
+    const mark = state.marks[l.id] || {};
+    const p = ppsqm(l);
+    const hstat = hs[l.neighborhood || "לא צוין"];
+    const avg = hstat && hstat.ppsN > 1 ? hstat.ppsSum / hstat.ppsN : null;
+    let cmp = "";
+    if (p && avg) {
+      const diff = Math.round((p / avg - 1) * 100);
+      if (Math.abs(diff) >= 3) cmp = `<span class="cmp ${diff < 0 ? "lo" : "hi"}">${Math.abs(diff)}% ${diff < 0 ? "מתחת" : "מעל"} לשכונה</span>`;
+      else cmp = `<span class="cmp">כמו ממוצע השכונה</span>`;
+    }
+    const days = daysSince(l.firstSeen);
+    const badges = [];
+    if (l.isNew) badges.push(`<span class="badge b-new">חדש</span>`);
+    if (isDrop(l)) badges.push(`<span class="badge b-drop">ירד ב־${fmt(l.prevPrice - l.price)}</span>`);
+    (l.sources || []).forEach((s) => badges.push(`<span class="badge b-src">${s === "madlan" ? "מדלן" : "יד2"}</span>`));
+    const mapQ = encodeURIComponent(`${l.street ? l.street + ", " : ""}${l.neighborhood && l.neighborhood !== "לא צוין" ? l.neighborhood + ", " : ""}${l.city || "נס ציונה"}`);
+    const links = (l.links || []).map((k) => `<a class="btn primary" href="${esc(k.url)}" target="_blank" rel="noopener">פתיחת המודעה ב${k.site === "madlan" ? "מדלן" : "יד2"}</a>`).join("");
+    const whoName = mark.updatedBy && state.profiles[mark.updatedBy] ? state.profiles[mark.updatedBy].name : "";
+    const who = mark.updatedAt ? `<span class="who">עודכן ${esc(heDate(mark.updatedAt))}${whoName ? " ע״י " + esc(whoName) : ""}</span>` : "";
+    return `<article class="card ${st === "rejected" ? "rejected" : ""}" data-id="${esc(l.id)}">
+      <div class="card-top">
+        <div>
+          ${l.price ? `<div class="price">${fmt(l.price)}${isDrop(l) ? `<span class="old">${fmt(l.prevPrice)}</span>` : ""}</div>` : `<div class="price none">מחיר לא פורסם</div>`}
+        </div>
+        <div class="badges">${badges.join("")}</div>
+      </div>
+      <div>
+        <p class="addr">${esc(l.street || l.neighborhood || l.city || "נס ציונה")}</p>
+        <p class="hood">${esc([l.street ? l.neighborhood : "", l.city || "נס ציונה", l.type].filter(Boolean).join(" · "))}</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><span>חדרים</span><b>${l.rooms ? esc(l.rooms) : "–"}</b></div>
+        <div class="fact"><span>מ״ר</span><b>${l.sqm ? l.sqm.toLocaleString("he-IL") : "–"}</b></div>
+        <div class="fact"><span>מחיר למ״ר</span><b>${p ? fmt(p) : "–"}</b>${cmp}</div>
+        <div class="fact"><span>במעקב</span><b>${days === null ? "–" : days === 0 ? "היום" : days + " ימים"}</b></div>
+      </div>
+      ${l.priceHistory && l.priceHistory.length > 1 ? `<div class="spark">${sparkSvg(l.priceHistory)}<span>היסטוריית מחיר: ${l.priceHistory.map((h) => fmtM(h.price)).join(" ← ")}</span></div>` : ""}
+      ${l.agency || l.note ? `<p class="agent">${esc([l.agency ? "מתווך: " + l.agency : "", l.note].filter(Boolean).join(" · "))}</p>` : ""}
+      <div class="status-row">
+        <span>מה המצב עם הבית הזה?</span>
+        <div class="st-btns">${STATUSES.filter((s) => s.key).map((s) => `<button type="button" class="st ${s.key === "rejected" ? "rej" : ""}" data-st="${s.key}" aria-pressed="${st === s.key}" ${state.canWrite ? "" : "disabled"}>${esc(s.label)}</button>`).join("")}</div>
+      </div>
+      <div class="notes">
+        <label for="note-${esc(l.id)}" class="hood">הערות</label>
+        <textarea id="note-${esc(l.id)}" data-note placeholder="למשל: המתווך אמר שיש גמישות במחיר" ${state.canWrite ? "" : "readonly"}>${esc(mark.notes || "")}</textarea>
+        <small data-note-msg>${who}</small>
+      </div>
+      <div class="actions">
+        ${links}
+        <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=${mapQ}" target="_blank" rel="noopener">במפה</a>
+      </div>
+    </article>`;
+  }
+
+  function renderList() {
+    const ls = filtered();
+    const hs = hoodStats();
+    if (!state.listings.length) {
+      $("list").innerHTML = `<div class="empty">הבתים יופיעו כאן אחרי הבדיקה הראשונה. הבדיקה רצה אוטומטית כל יומיים.</div>`;
+      return;
+    }
+    if (!ls.length) {
+      $("list").innerHTML = `<div class="empty">אין בתים שמתאימים לסינון הזה. <button type="button" class="btn ghost" id="clearF">הצגת כל הבתים</button></div>`;
+      return;
+    }
+    // keep focused textarea intact while typing
+    const focused = document.activeElement && document.activeElement.matches && document.activeElement.matches("textarea[data-note]") ? document.activeElement : null;
+    if (focused) {
+      ls.forEach((l) => {
+        const card = $("list").querySelector(`.card[data-id="${CSS.escape(l.id)}"]`);
+        if (card && !card.contains(focused)) card.outerHTML = cardHtml(l, hs);
+      });
+      return;
+    }
+    $("list").innerHTML = ls.map((l) => cardHtml(l, hs)).join("");
+  }
+
+  function renderHoods() {
+    const hs = hoodStats();
+    const rows = Object.entries(hs).sort((a, b) => b[1].n - a[1].n);
+    const sel = $("hoodSel");
+    const cur = state.hood;
+    sel.innerHTML = `<option value="">כל השכונות</option>` + rows.map(([h, v]) => `<option value="${esc(h)}" ${h === cur ? "selected" : ""}>${esc(h)} (${v.n})</option>`).join("");
+    $("hoodBody").innerHTML = rows.length ? rows.map(([h, v]) => `<tr><td>${esc(h)}</td><td class="n">${v.n}</td><td class="n">${v.priced ? fmtM(v.sum / v.priced) : "–"}</td><td class="n">${v.ppsN ? fmt(v.ppsSum / v.ppsN) : "–"}</td></tr>`).join("") : `<tr><td colspan="4">אין עדיין נתונים</td></tr>`;
+  }
+
+  function renderSettings() {
+    const st = state.settings || {};
+    const box = $("settingsBox");
+    if (document.activeElement && box.contains(document.activeElement)) return;
+    $("maxPrice").value = st.maxPrice || 4500000;
+    const chosen = new Set(st.cities && st.cities.length ? st.cities : ["נס ציונה"]);
+    const all = [...new Set([...DEFAULT_CITIES, ...chosen])];
+    $("cities").innerHTML = all.map((c, i) => `<label for="city-${i}"><input type="checkbox" id="city-${i}" value="${esc(c)}" ${chosen.has(c) ? "checked" : ""} ${state.canWrite ? "" : "disabled"}> ${esc(c)}</label>`).join("");
+    $("maxPrice").disabled = !state.canWrite;
+    $("extraCity").disabled = !state.canWrite;
+    $("saveSettings").disabled = !state.canWrite;
+  }
+
+  async function resolveProfiles() {
+    if (!state.user) return;
+    const ids = [...new Set(Object.values(state.marks).map((m) => m.updatedBy).filter(Boolean))];
+    if (!ids.length) return;
+    try { state.profiles = await state.user.profiles(ids); } catch (e) {}
+  }
+
+  function renderAll() { renderSummary(); renderChips(); renderStatus(); renderHoods(); renderList(); }
+
+  // ---------- events ----------
+  document.addEventListener("click", async (e) => {
+    const q = e.target.closest(".sum");
+    if (q) { state.quick = q.dataset.quick; renderSummary(); renderList(); return; }
+    const c = e.target.closest(".chip");
+    if (c) { state.filter = c.dataset.f; saveUi(); renderChips(); renderList(); return; }
+    if (e.target.id === "clearF") { state.filter = "active"; state.quick = "all"; state.hood = ""; state.rooms = 0; $("roomsSel").value = "0"; renderAll(); return; }
+    const sb = e.target.closest(".st");
+    if (sb) {
+      const id = sb.closest(".card").dataset.id;
+      const cur = statusOf({ id });
+      const next = cur === sb.dataset.st ? "" : sb.dataset.st;
+      await saveMark(id, { status: next });
+    }
+  });
+  $("sortSel").addEventListener("change", (e) => { state.sort = e.target.value; saveUi(); renderList(); });
+  $("hoodSel").addEventListener("change", (e) => { state.hood = e.target.value; renderList(); });
+  $("roomsSel").addEventListener("change", (e) => { state.rooms = +e.target.value; renderList(); });
+
+  const noteTimers = {};
+  document.addEventListener("input", (e) => {
+    if (!e.target.matches("textarea[data-note]")) return;
+    const card = e.target.closest(".card"); const id = card.dataset.id;
+    const msg = card.querySelector("[data-note-msg]");
+    msg.textContent = "שומר…";
+    clearTimeout(noteTimers[id]);
+    noteTimers[id] = setTimeout(async () => {
+      const ok = await saveMark(id, { notes: e.target.value }, true);
+      msg.textContent = ok ? "נשמר ✓" : "לא נשמר. נסו שוב.";
+    }, 900);
+  });
+
+  const writing = {};
+  async function saveMark(id, patch, quiet) {
+    if (!state.db) { if (!quiet) alertMsg("השמירה לא זמינה כרגע"); return false; }
+    while (writing[id]) await writing[id];
+    const prev = state.marks[id] || {};
+    const me = state.user ? await state.user.id().catch(() => null) : null;
+    const body = { status: prev.status || "", notes: prev.notes || "", ...patch, updatedAt: new Date().toISOString() };
+    if (me) body.updatedBy = me;
+    state.marks[id] = body;
+    if (!quiet) { renderSummary(); renderChips(); renderList(); }
+    const p = state.db.doc("marks/" + id).set(body);
+    writing[id] = p.catch(() => {});
+    try { await p; return true; }
+    catch (err) {
+      if (err && err.code === "invalid_argument") { state.canWrite = false; renderList(); renderSettings(); }
+      state.marks[id] = prev; if (!quiet) renderAll();
+      return false;
+    } finally { delete writing[id]; }
+  }
+  function alertMsg(t) { $("statusLine").insertAdjacentHTML("beforeend", `<span style="color:var(--drop)">${esc(t)}</span>`); }
+
+  $("settingsForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!state.db) { $("saveMsg").textContent = "השמירה לא זמינה כרגע"; return; }
+    const cities = [...$("cities").querySelectorAll("input:checked")].map((i) => i.value);
+    const extra = $("extraCity").value.trim();
+    if (extra && !cities.includes(extra)) cities.push(extra);
+    const maxPrice = Math.max(500000, Math.round(+$("maxPrice").value || 4500000));
+    if (!cities.length) { $("saveMsg").textContent = "צריך לבחור לפחות עיר אחת"; return; }
+    const body = { ...(state.settings || {}), maxPrice, cities, updatedAt: new Date().toISOString() };
+    try {
+      await state.db.doc("meta/settings").set(body);
+      state.settings = body; $("extraCity").value = "";
+      $("saveMsg").textContent = "נשמר. הבדיקה הבאה תחפש לפי ההגדרות החדשות.";
+      $("saveSettings").blur(); renderSettings(); renderStatus();
+    } catch (err) {
+      $("saveMsg").textContent = err && err.code === "invalid_argument" ? "אין לך הרשאה לשנות הגדרות." : "השמירה נכשלה. נסו שוב בעוד רגע.";
+    }
+  });
+
+  // ---------- boot ----------
+  $("sortSel").value = state.sort;
+  renderAll(); renderSettings();
+  (async () => {
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    state.user = user;
+    if (!db) { $("statusLine").innerHTML = "<span>כדי לראות את הבתים צריך להיות מחוברים לחשבון Claude.</span>"; return; }
+    state.db = db;
+    if (user) { const cw = await user.can("data.write"); if (cw === false) state.canWrite = false; }
+    db.collection("listings").limit(1000).onSnapshot((snap) => {
+      state.listings = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      renderAll();
+    }, () => {});
+    db.collection("marks").limit(1000).onSnapshot(async (snap) => {
+      const m = {}; snap.docs.forEach((d) => { m[d.id] = d.data(); });
+      Object.keys(writing).forEach((k) => { if (state.marks[k]) m[k] = state.marks[k]; });
+      state.marks = m;
+      await resolveProfiles();
+      renderAll();
+    }, () => {});
+    db.doc("meta/settings").onSnapshot((d) => { state.settings = d.exists ? d.data() : null; renderStatus(); renderSettings(); }, () => {});
+    db.doc("meta/status").onSnapshot((d) => { state.status = d.exists ? d.data() : null; renderStatus(); }, () => {});
+  })();
+})();
+</script>
+
+</body></html>
